@@ -7,7 +7,6 @@ plugins {
 }
 
 group = "io.freefair"
-version = "1.0-SNAPSHOT"
 
 nexusPublishing {
     repositories {
