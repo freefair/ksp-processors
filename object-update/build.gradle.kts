@@ -2,6 +2,8 @@ plugins {
     id("maven-publish")
 }
 
+description = "KSP for generating update functions for objects"
+
 dependencies {
     implementation(libs.ksp)
 
