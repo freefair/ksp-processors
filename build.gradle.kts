@@ -1,9 +1,13 @@
+import io.github.gradlenexus.publishplugin.shadow.retrofit2.KotlinExtensions
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
+
 plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.nexus.publish)
     alias(libs.plugins.git.version)
     alias(libs.plugins.dependency.submission)
     alias(libs.plugins.validate.poms) apply false
+    alias(libs.plugins.dokka) apply false
 }
 
 group = "io.freefair"
@@ -18,6 +22,7 @@ nexusPublishing {
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.dokka")
 
     group = "io.freefair.ksp"
     version = rootProject.version
@@ -44,7 +49,17 @@ subprojects {
         }
 
         extensions.getByType(PublishingExtension::class.java).apply {
+            val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+            val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+                dependsOn(dokkaHtml)
+                archiveClassifier.set("javadoc")
+                from(dokkaHtml.outputDirectory)
+            }
+
             publications.withType<MavenPublication>().configureEach {
+                artifact(javadocJar)
+                artifact(tasks.named("kotlinSourcesJar"))
                 pom {
                     url.set("https://github.com/freefair/ksp-processors")
                     name.set(provider { project.description })

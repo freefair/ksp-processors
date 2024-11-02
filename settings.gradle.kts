@@ -20,6 +20,7 @@ dependencyResolutionManagement {
             plugin("validate-poms", "io.freefair.maven-central.validate-poms").versionRef("freefair")
             plugin("git-version", "io.freefair.git-version").versionRef("freefair")
             plugin("dependency-submission", "io.freefair.github.dependency-submission").versionRef("freefair")
+            plugin("dokka", "org.jetbrains.dokka").version("1.9.20")
 
             library("ksp", "com.google.devtools.ksp", "symbol-processing-api").versionRef("ksp")
 
