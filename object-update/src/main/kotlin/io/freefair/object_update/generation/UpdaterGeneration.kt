@@ -40,10 +40,9 @@ class UpdaterGeneration(options: Map<String, String>) {
         return classBuilder.build()
     }
 
-    @OptIn(KspExperimental::class)
     private fun getFilteredProperties(classDeclaration: KSClassDeclaration) =
         classDeclaration.getAllProperties().filter { property ->
-            !property.isAnnotationPresent(NotUpdatable::class) && property.isMutable
+            property.annotations.all { a -> a.shortName.asString() != NotUpdatable::class.simpleName } && property.isMutable
         }
 
     private fun generateUpdateFunction(
